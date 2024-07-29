@@ -9,8 +9,13 @@ import "./styles.css";
 // подстановки типа к comments
 
 // тут
+type Comment = {
+  id: number;
+  text: string;
+  children?: Comment[];
+};
 
-const comments = [
+const comments: Comment[] = [
   {
     id: 1,
     text: "message 1",
@@ -85,10 +90,30 @@ const comments = [
 
 // 2, 3 пишем тут
 // вставляем в App вместо "Comments..."
+type Props = {
+  comment: Comment;
+};
+
+const CommentComponent = ({ comment }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [children, setChildren] = useState<Comment[] | null>(null);
+
+  return (
+    <div>
+      <div>
+        {comment.children ? (isOpen ? "-" : "+") : null} {comment.text}
+      </div>
+
+      {comment?.children?.map((item) => {
+        return <CommentComponent key={comment.id} comment={item} />;
+      })}
+    </div>
+  );
+};
 
 // 2
 function App() {
-  return <div>Hello</div>;
+  return <CommentComponent comment={comments[0]} />;
 }
 
 export default App;
